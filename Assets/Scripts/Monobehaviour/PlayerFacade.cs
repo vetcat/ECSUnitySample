@@ -3,11 +3,17 @@ using Zenject;
 
 public class PlayerFacade : MonoBehaviour
 {
-    public class Pool : MonoMemoryPool<Vector3, PlayerFacade>
+    private void Reset(Vector3 position, Quaternion rotation)
     {
-        protected override void Reinitialize(Vector3 position, PlayerFacade item)
+        transform.position = position;
+        transform.rotation = rotation;
+    }
+
+    public class Pool : MonoMemoryPool<Vector3, Quaternion, PlayerFacade>
+    {
+        protected override void Reinitialize(Vector3 position, Quaternion rotation, PlayerFacade item)
         {
-            item.transform.position = position;
+            item.Reset(position, rotation);
         }
     }
 }

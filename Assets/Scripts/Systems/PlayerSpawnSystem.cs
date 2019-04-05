@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using Components;
 using Installers;
 using Signals;
 using UniRx;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -15,14 +13,12 @@ namespace Systems
     public class PlayerSpawnSystem : ComponentSystem, IPrioritySystem
     {
         public int Priority { get; }
-        public readonly ReactiveDictionary<Entity, PlayerFacade> SpawnDictionary = new ReactiveDictionary<Entity, PlayerFacade>();
+        public readonly ReactiveCollection<PlayerFacade> SpawnList = new ReactiveCollection<PlayerFacade>();
 
         private readonly SignalBus _signalBus;
         private readonly PlayerFacade.Pool _pool;
         private readonly GameSettings _settings;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
-        private readonly List<PlayerFacade> _destroysList = new List<PlayerFacade>();
-        private ComponentGroup _group;
 
         public PlayerSpawnSystem(SignalBus signalBus, int priority, PlayerFacade.Pool pool, GameSettings settings)
         {
@@ -34,13 +30,23 @@ namespace Systems
 
         protected override void OnCreateManager()
         {
-            _group = GetComponentGroup(
-                ComponentType.ReadOnly<DestroyEntityComponent>(),
-                ComponentType.ReadOnly<PlayerComponent>());
-
             _signalBus.GetStream<SignalUiLayerWantsAddPlayer>()
                 .Subscribe(x => {Add(x.Count);})
                 .AddTo(_disposables);
+
+            _signalBus.GetStream<SignalUiLayerWantsRemovePlayer>()
+                .Subscribe(Remove)
+                .AddTo(_disposables);
+        }
+
+        private void Remove(SignalUiLayerWantsRemovePlayer data)
+        {
+            if (SpawnList.Count == 0)
+                return;
+
+            var deSpawn = SpawnList[0];
+            _pool.Despawn(deSpawn);
+            SpawnList.Remove(deSpawn);
         }
 
         protected override void OnDestroyManager()
@@ -50,24 +56,6 @@ namespace Systems
 
         protected override void OnUpdate()
         {
-            //this code does not work every frame
-            Entities.With(_group).ForEach(
-                (entity) =>
-                {
-                    if (SpawnDictionary.ContainsKey(entity))
-                    {
-                        _destroysList.Add(SpawnDictionary[entity]);
-                        SpawnDictionary.Remove(entity);
-                    }
-                    PostUpdateCommands.DestroyEntity(entity);
-                });
-
-            foreach (var entity in _destroysList)
-            {
-                _pool.Despawn(entity);
-            }
-
-            _destroysList.Clear();
         }
 
         private void Add(int count)
@@ -75,19 +63,20 @@ namespace Systems
             for (var i = 0; i < count; i++)
             {
                 var spawnPosition = new Vector3(Random.Range(-10f, 10f), 0f, Random.Range(-10f, 10f));
-                Spawn(spawnPosition, quaternion.identity);
+                Spawn(spawnPosition, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
             }
         }
 
-        private void Spawn(Vector3 position, quaternion rotation)
+        private void Spawn(Vector3 position, Quaternion rotation)
         {
-            var spawn = _pool.Spawn(position);
+            var spawn = _pool.Spawn(position, rotation);
             var entity = spawn.gameObject.GetComponent<GameObjectEntity>().Entity;
+
             EntityManager.AddComponentData(entity, new PlayerComponent());
             EntityManager.AddComponentData(entity, new HealthComponent { Value = _settings.constants.healthPlayer });
             EntityManager.AddComponentData(entity, new InputComponent());
 
-            SpawnDictionary.Add(entity, spawn);
+            SpawnList.Add(spawn);
         }
     }
 }

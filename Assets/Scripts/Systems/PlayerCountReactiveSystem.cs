@@ -22,7 +22,7 @@ namespace Systems
 
         public void Initialize()
         {
-            _spawnSystem.SpawnDictionary.ObserveCountChanged()
+            _spawnSystem.SpawnList.ObserveCountChanged()
                 .Subscribe((count) =>
                 {
                     _signalBus.Fire(new SignalEcsLayerPlayerCountUpdate(count));

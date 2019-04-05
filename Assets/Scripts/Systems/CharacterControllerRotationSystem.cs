@@ -29,8 +29,7 @@ namespace Systems
             _group = GetComponentGroup(
                 ComponentType.ReadOnly<Transform>(),
                 ComponentType.ReadOnly<CharacterController>(),
-                ComponentType.ReadOnly<InputComponent>(),
-                ComponentType.Exclude<DestroyEntityComponent>());
+                ComponentType.ReadOnly<InputComponent>());
         }
 
         protected override void OnUpdate()

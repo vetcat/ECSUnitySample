@@ -43,8 +43,7 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<CharacterControllerRotationSystem>().AsSingle().WithArguments(130).NonLazy();
 
             //low priority
-            Container.BindInterfacesAndSelfTo<PlayerRemoveSystem>().AsSingle().WithArguments(1050).NonLazy();
-            Container.BindInterfacesAndSelfTo<PlayerSpawnSystem>().AsSingle().WithArguments(1060).NonLazy();
+            Container.BindInterfacesAndSelfTo<PlayerSpawnSystem>().AsSingle().WithArguments(1010).NonLazy();
 
             //simple reactive system
             Container.BindInterfacesAndSelfTo<PlayerCountReactiveSystem>().AsSingle().NonLazy();

@@ -1,4 +1,5 @@
-﻿using Components;
+﻿using System;
+using Components;
 using Installers;
 using Providers;
 using Unity.Entities;
@@ -29,17 +30,20 @@ namespace Systems
             _group = GetComponentGroup(
                 ComponentType.ReadOnly<Transform>(),
                 ComponentType.ReadOnly<CharacterController>(),
-                ComponentType.ReadOnly<InputComponent>(),
-                ComponentType.Exclude<DestroyEntityComponent>());
+                ComponentType.ReadOnly<InputComponent>());
         }
 
         protected override void OnUpdate()
         {
+            var speed = _settings.constants.SpeedPlayerMove * _inputProvider.Vertical;
+
+            if (Math.Abs(speed) < 0.01f)
+                return;
+
             Entities.With(_group).ForEach(
                 (Entity entity, CharacterController controller, Transform transform) =>
                 {
-                    var speed = _settings.constants.SpeedPlayerMove * _inputProvider.Vertical;
-                    controller.Move(transform.forward * speed * _timeProvider.DeltaTime);
+                   controller.Move(transform.forward * speed * _timeProvider.DeltaTime);
                 });
         }
     }
