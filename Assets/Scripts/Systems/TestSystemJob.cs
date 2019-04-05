@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Unity.Entities;
 using Unity.Jobs;
+using UnityEngine;
 
 namespace Systems
 {
@@ -24,6 +25,7 @@ namespace Systems
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
+            Debug.Log("[TestSystemJob] OnUpdate");
             return inputDeps;
         }
     }
