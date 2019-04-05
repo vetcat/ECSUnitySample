@@ -31,7 +31,7 @@ namespace Systems
                 ComponentType.Exclude<DestroyEntityComponent>());
 
             _signalBus.GetStream<SignalUiLayerWantsRemovePlayer>()
-                .Subscribe(RemoveEnemy)
+                .Subscribe(Remove)
                 .AddTo(_disposables);
         }
 
@@ -44,7 +44,7 @@ namespace Systems
         {
         }
 
-        private void RemoveEnemy(SignalUiLayerWantsRemovePlayer data)
+        private void Remove(SignalUiLayerWantsRemovePlayer data)
         {
             if (_group.CalculateLength() == 0)
             {

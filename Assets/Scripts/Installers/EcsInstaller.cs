@@ -41,11 +41,13 @@ namespace Installers
             //medium priority
             Container.BindInterfacesAndSelfTo<CharacterControllerMovementSystem>().AsSingle().WithArguments(130).NonLazy();
             Container.BindInterfacesAndSelfTo<CharacterControllerRotationSystem>().AsSingle().WithArguments(130).NonLazy();
-            Container.BindInterfacesAndSelfTo<PlayerCalculateCountSystem>().AsSingle().WithArguments(140).NonLazy();
 
             //low priority
             Container.BindInterfacesAndSelfTo<PlayerRemoveSystem>().AsSingle().WithArguments(1050).NonLazy();
             Container.BindInterfacesAndSelfTo<PlayerSpawnSystem>().AsSingle().WithArguments(1060).NonLazy();
+
+            //simple reactive system
+            Container.BindInterfacesAndSelfTo<PlayerCountReactiveSystem>().AsSingle().NonLazy();
         }
 
         private void BindSignals()
@@ -60,7 +62,7 @@ namespace Installers
             Container.BindMemoryPool<PlayerFacade, PlayerFacade.Pool>()
                 .WithInitialSize(10)
                 .FromComponentInNewPrefab(_settings.prefabs.player)
-                .UnderTransformGroup("Pool_Enemy");
+                .UnderTransformGroup("Pool_Players");
         }
     }
 }

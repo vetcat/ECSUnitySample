@@ -10,7 +10,7 @@ namespace Ui.Controllers
     {
         private readonly SignalBus _signalBus;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
-        private const int ADD_ENEMY_COUNT = 1;
+        private const int AddPayerCount = 1;
 
         public PlayerViewController(SignalBus signalBus)
         {
@@ -20,7 +20,7 @@ namespace Ui.Controllers
         public override void Initialize()
         {
             View.buttonAdd.OnClickAsObservable()
-                .Subscribe(_=>{ _signalBus.Fire(new SignalUiLayerWantsAddPlayer(ADD_ENEMY_COUNT));})
+                .Subscribe(_=>{ _signalBus.Fire(new SignalUiLayerWantsAddPlayer(AddPayerCount));})
                 .AddTo(_disposables);
 
             View.buttonRemove.OnClickAsObservable()

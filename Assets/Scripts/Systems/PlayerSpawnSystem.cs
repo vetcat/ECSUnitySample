@@ -15,19 +15,19 @@ namespace Systems
     public class PlayerSpawnSystem : ComponentSystem, IPrioritySystem
     {
         public int Priority { get; }
+        public readonly ReactiveDictionary<Entity, PlayerFacade> SpawnDictionary = new ReactiveDictionary<Entity, PlayerFacade>();
 
         private readonly SignalBus _signalBus;
-        private readonly PlayerFacade.Pool _enemyPool;
+        private readonly PlayerFacade.Pool _pool;
         private readonly GameSettings _settings;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
-        private readonly Dictionary<Entity, PlayerFacade> _spawnDictionary = new Dictionary<Entity, PlayerFacade>();
         private readonly List<PlayerFacade> _destroysList = new List<PlayerFacade>();
         private ComponentGroup _group;
 
-        public PlayerSpawnSystem(SignalBus signalBus, int priority, PlayerFacade.Pool enemyPool, GameSettings settings)
+        public PlayerSpawnSystem(SignalBus signalBus, int priority, PlayerFacade.Pool pool, GameSettings settings)
         {
             _signalBus = signalBus;
-            _enemyPool = enemyPool;
+            _pool = pool;
             _settings = settings;
             Priority = priority;
         }
@@ -54,17 +54,17 @@ namespace Systems
             Entities.With(_group).ForEach(
                 (entity) =>
                 {
-                    if (_spawnDictionary.ContainsKey(entity))
+                    if (SpawnDictionary.ContainsKey(entity))
                     {
-                        _destroysList.Add(_spawnDictionary[entity]);
-                        _spawnDictionary.Remove(entity);
+                        _destroysList.Add(SpawnDictionary[entity]);
+                        SpawnDictionary.Remove(entity);
                     }
                     PostUpdateCommands.DestroyEntity(entity);
                 });
 
             foreach (var entity in _destroysList)
             {
-                _enemyPool.Despawn(entity);
+                _pool.Despawn(entity);
             }
 
             _destroysList.Clear();
@@ -81,13 +81,13 @@ namespace Systems
 
         private void Spawn(Vector3 position, quaternion rotation)
         {
-            var enemy = _enemyPool.Spawn(position);
-            var entity = enemy.gameObject.GetComponent<GameObjectEntity>().Entity;
+            var spawn = _pool.Spawn(position);
+            var entity = spawn.gameObject.GetComponent<GameObjectEntity>().Entity;
             EntityManager.AddComponentData(entity, new PlayerComponent());
             EntityManager.AddComponentData(entity, new HealthComponent { Value = _settings.constants.healthPlayer });
             EntityManager.AddComponentData(entity, new InputComponent());
 
-            _spawnDictionary.Add(entity, enemy);
+            SpawnDictionary.Add(entity, spawn);
         }
     }
 }
