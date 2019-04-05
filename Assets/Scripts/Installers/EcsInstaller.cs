@@ -1,5 +1,6 @@
 using Systems;
 using Managers;
+using Providers;
 using Signals;
 using Unity.Entities;
 using Zenject;
@@ -16,11 +17,18 @@ namespace Installers
 
             SignalBusInstaller.Install(Container);
 
+            BindProviders();
             BindSignals();
-            BindFactory();
+            BindFactories();
             BindSystems();
 
             Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle().NonLazy();
+        }
+
+        private void BindProviders()
+        {
+            Container.Bind<ITimeProvider>().To<TimeProvider>().AsSingle().NonLazy();
+            Container.Bind<IInputProvider>().To<InputProvider>().AsSingle().NonLazy();
         }
 
         private void BindSystems()
@@ -28,11 +36,13 @@ namespace Installers
             //Container.BindInterfacesAndSelfTo<TestSystem>().AsSingle().WithArguments(20).NonLazy();
             //Container.BindInterfacesAndSelfTo<TestSystemJob>().AsSingle().WithArguments(30).NonLazy();
 
-            Container.BindInterfacesAndSelfTo<EnemyCalculateCountSystem>().AsSingle().WithArguments(10).NonLazy();
+            Container.BindInterfacesAndSelfTo<InputSystem>().AsSingle().WithArguments(30).NonLazy();
+
+            Container.BindInterfacesAndSelfTo<DeltaTimeUpdateSystem>().AsSingle().WithArguments(10).NonLazy();
+
+            Container.BindInterfacesAndSelfTo<EnemyCalculateCountSystem>().AsSingle().WithArguments(20).NonLazy();
             Container.BindInterfacesAndSelfTo<EntityRemoveSystem>().AsSingle().WithArguments(40).NonLazy();
             Container.BindInterfacesAndSelfTo<EnemySpawnSystem>().AsSingle().WithArguments(50).NonLazy();
-
-            //Container.BindInterfacesAndSelfTo<DestroyEntitySystem>().AsSingle().WithArguments(500).NonLazy();
         }
 
         private void BindSignals()
@@ -42,7 +52,7 @@ namespace Installers
             Container.DeclareSignal<SignalEcsLayerEnemyCountUpdate>();
         }
 
-        private void BindFactory()
+        private void BindFactories()
         {
             Container.BindMemoryPool<EnemyFacade, EnemyFacade.Pool>()
                 .WithInitialSize(10)

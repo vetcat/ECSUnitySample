@@ -1,5 +1,4 @@
-﻿using Interfaces;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 

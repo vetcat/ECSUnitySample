@@ -1,5 +1,4 @@
 ﻿using Components;
-using Interfaces;
 using Signals;
 using Unity.Entities;
 using UnityEngine;

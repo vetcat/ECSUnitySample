@@ -1,4 +1,4 @@
-namespace Interfaces
+namespace Systems
 {
     public interface IPrioritySystem
     {

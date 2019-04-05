@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Components;
-using Interfaces;
 using Signals;
 using UniRx;
 using Unity.Entities;
@@ -86,6 +85,7 @@ namespace Systems
             var entity = enemy.gameObject.GetComponent<GameObjectEntity>().Entity;
             _entityManager.AddComponentData(entity, new EnemyComponent());
             _entityManager.AddComponentData(entity, new HealthComponent { Value = 50 });
+            _entityManager.AddComponentData(entity, new InputComponent());
 
             _enemySpawns.Add(entity, enemy);
         }
