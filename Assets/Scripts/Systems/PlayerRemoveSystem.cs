@@ -1,6 +1,7 @@
 using Components;
 using Signals;
 using UniRx;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 using Zenject;
@@ -8,16 +9,15 @@ using Zenject;
 namespace Systems
 {
     [DisableAutoCreation]
-    public class EntityRemoveSystem : ComponentSystem, IPrioritySystem
+    public class PlayerRemoveSystem : ComponentSystem, IPrioritySystem
     {
         public int Priority { get; }
 
         private readonly SignalBus _signalBus;
-        private EntityManager _entityManager;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
-        private ComponentGroup _enemyGroup;
+        private ComponentGroup _group;
 
-        public EntityRemoveSystem(SignalBus signalBus, int priority)
+        public PlayerRemoveSystem(SignalBus signalBus, int priority)
         {
             _signalBus = signalBus;
             Priority = priority;
@@ -25,14 +25,12 @@ namespace Systems
 
         protected override void OnCreateManager()
         {
-            _entityManager = World.Active.GetExistingManager<EntityManager>();
-
-            _enemyGroup = GetComponentGroup(
+            _group = GetComponentGroup(
                 ComponentType.ReadOnly<Transform>(),
-                ComponentType.ReadOnly<EnemyComponent>(),
+                ComponentType.ReadOnly<PlayerComponent>(),
                 ComponentType.Exclude<DestroyEntityComponent>());
 
-            _signalBus.GetStream<SignalUiLayerWantsRemoveEnemy>()
+            _signalBus.GetStream<SignalUiLayerWantsRemovePlayer>()
                 .Subscribe(RemoveEnemy)
                 .AddTo(_disposables);
         }
@@ -46,15 +44,16 @@ namespace Systems
         {
         }
 
-        private void RemoveEnemy(SignalUiLayerWantsRemoveEnemy data)
+        private void RemoveEnemy(SignalUiLayerWantsRemovePlayer data)
         {
-            var enemies = _enemyGroup.GetEntityArray();
-            if (enemies.Length == 0)
+            if (_group.CalculateLength() == 0)
             {
                 return;
             }
 
-            _entityManager.AddComponentData(enemies[0], new DestroyEntityComponent());
+            var entities = _group.ToEntityArray(Allocator.TempJob);
+            EntityManager.AddComponent(entities[0], typeof(DestroyEntityComponent));
+            entities.Dispose();
         }
     }
 }

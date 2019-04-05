@@ -9,7 +9,7 @@ namespace Installers
     [CreateAssetMenu(fileName = "UiSettingsInstaller", menuName = "Installers/UiSettingsInstaller")]
     public class UiSettingsInstaller : ScriptableObjectInstaller<UiSettingsInstaller>
     {
-        public EnemyView enemyView;
+        public PlayerView playerView;
 
         public override void InstallBindings()
         {
@@ -26,7 +26,7 @@ namespace Installers
         private void BindViews(Canvas canvas)
         {
             Debug.Log("BindViews");
-            Container.BindViewController<EnemyView, EnemyViewController>(enemyView, canvas);
+            Container.BindViewController<PlayerView, PlayerViewController>(playerView, canvas);
         }
     }
 }

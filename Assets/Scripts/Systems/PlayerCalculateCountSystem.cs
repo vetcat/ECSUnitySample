@@ -7,14 +7,14 @@ using Zenject;
 namespace Systems
 {
     [DisableAutoCreation]
-    public class EnemyCalculateCountSystem : ComponentSystem, IPrioritySystem
+    public class PlayerCalculateCountSystem : ComponentSystem, IPrioritySystem
     {
         private readonly SignalBus _signalBus;
         private ComponentGroup _enemyGroup;
         private int _enemyCount;
         private int _enemyCountOldValue;
 
-        public EnemyCalculateCountSystem(int priority, SignalBus signalBus)
+        public PlayerCalculateCountSystem(int priority, SignalBus signalBus)
         {
             _signalBus = signalBus;
             Priority = priority;
@@ -26,7 +26,7 @@ namespace Systems
         {
             _enemyGroup = GetComponentGroup(
                 ComponentType.ReadOnly<Transform>(),
-                ComponentType.ReadOnly<EnemyComponent>(),
+                ComponentType.ReadOnly<PlayerComponent>(),
                 ComponentType.Exclude<DestroyEntityComponent>());
         }
 
@@ -36,7 +36,7 @@ namespace Systems
 
             if (_enemyCount != _enemyCountOldValue)
             {
-                _signalBus.Fire(new SignalEcsLayerEnemyCountUpdate(_enemyCount));
+                _signalBus.Fire(new SignalEcsLayerPlayerCountUpdate(_enemyCount));
                 _enemyCountOldValue = _enemyCount;
             }
         }

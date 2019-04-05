@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08a4ba65abcbfc2459c252b48a77acc8, type: 3}
   m_Name: UiSettingsInstaller
   m_EditorClassIdentifier: 
-  enemyView: {fileID: 8182278234831675526, guid: 71139df94d1cd3544a9ca1d75d4d3e30,
+  playerView: {fileID: 8182278234831675526, guid: 71139df94d1cd3544a9ca1d75d4d3e30,
     type: 3}

@@ -6,13 +6,13 @@ using Zenject;
 
 namespace Ui.Controllers
 {
-    public class EnemyViewController : UiController<EnemyView>
+    public class PlayerViewController : UiController<PlayerView>
     {
         private readonly SignalBus _signalBus;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
         private const int ADD_ENEMY_COUNT = 1;
 
-        public EnemyViewController(SignalBus signalBus)
+        public PlayerViewController(SignalBus signalBus)
         {
             _signalBus = signalBus;
         }
@@ -20,17 +20,16 @@ namespace Ui.Controllers
         public override void Initialize()
         {
             View.buttonAdd.OnClickAsObservable()
-                .Subscribe(_=>{ _signalBus.Fire(new SignalUiLayerWantsAddEnemy(ADD_ENEMY_COUNT));})
+                .Subscribe(_=>{ _signalBus.Fire(new SignalUiLayerWantsAddPlayer(ADD_ENEMY_COUNT));})
                 .AddTo(_disposables);
 
             View.buttonRemove.OnClickAsObservable()
-                .Subscribe(_=>{_signalBus.Fire<SignalUiLayerWantsRemoveEnemy>();})
+                .Subscribe(_=>{_signalBus.Fire<SignalUiLayerWantsRemovePlayer>();})
                 .AddTo(_disposables);
 
-            _signalBus.GetStream<SignalEcsLayerEnemyCountUpdate>()
-                .Subscribe(UpdateEnemyCount)
+            _signalBus.GetStream<SignalEcsLayerPlayerCountUpdate>()
+                .Subscribe(UpdatePlayerCount)
                 .AddTo(_disposables);
-
         }
 
         public override void Dispose()
@@ -40,12 +39,12 @@ namespace Ui.Controllers
 
         public string GetFormattedText(int count)
         {
-            return $"Enemy count : {count:D}";
+            return $"Player count : {count:D}";
         }
 
-        private void UpdateEnemyCount(SignalEcsLayerEnemyCountUpdate data)
+        private void UpdatePlayerCount(SignalEcsLayerPlayerCountUpdate data)
         {
-            View.textEnemyCount.text = GetFormattedText(data.Count);
+            View.textPlayerCount.text = GetFormattedText(data.Count);
         }
     }
 }

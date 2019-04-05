@@ -3,10 +3,10 @@ using UnityEngine.UI;
 
 namespace Ui.Views
 {
-    public class EnemyView : UiView
+    public class PlayerView : UiView
     {
         public Button buttonAdd;
         public Button buttonRemove;
-        public Text textEnemyCount;
+        public Text textPlayerCount;
     }
 }

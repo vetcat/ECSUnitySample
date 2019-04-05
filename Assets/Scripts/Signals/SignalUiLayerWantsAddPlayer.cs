@@ -1,10 +1,10 @@
 namespace Signals
 {
-    public struct SignalEcsLayerEnemyCountUpdate
+    public struct SignalUiLayerWantsAddPlayer
     {
         public int Count { get; }
 
-        public SignalEcsLayerEnemyCountUpdate(int count)
+        public SignalUiLayerWantsAddPlayer(int count)
         {
             Count = count;
         }

@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 563e71db2c9d04a42a5d4e3b6cb3ffec, type: 3}
-  m_Name: PrefabsInstaller
+  m_Name: GameSettings
   m_EditorClassIdentifier: 
-  settings:
-    player: {fileID: 8172297688466210301, guid: 2d3bda7bdb06da54186ddc3761f6d1d9,
-      type: 3}
-    enemy: {fileID: 5789407731596698594, guid: 79012ae3bba00ff4f8e097a6f79d1d1f, type: 3}
+  constants:
     healthEnemy: 50
     healthPlayer: 100
+    SpeedPlayerMove: 5
+    SpeedPlayerRotate: 180
+  prefabs:
+    player: {fileID: 5789407731596698594, guid: 79012ae3bba00ff4f8e097a6f79d1d1f,
+      type: 3}

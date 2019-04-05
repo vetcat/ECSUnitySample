@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Components;
+using Installers;
 using Signals;
 using UniRx;
 using Unity.Entities;
@@ -11,35 +12,34 @@ using Random = UnityEngine.Random;
 namespace Systems
 {
     [DisableAutoCreation]
-    public class EnemySpawnSystem : ComponentSystem, IPrioritySystem
+    public class PlayerSpawnSystem : ComponentSystem, IPrioritySystem
     {
         public int Priority { get; }
 
         private readonly SignalBus _signalBus;
-        private readonly EnemyFacade.Pool _enemyPool;
-        private EntityManager _entityManager;
+        private readonly PlayerFacade.Pool _enemyPool;
+        private readonly GameSettings _settings;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
-        private readonly Dictionary<Entity, EnemyFacade> _enemySpawns = new Dictionary<Entity, EnemyFacade>();
-        private readonly List<EnemyFacade> _enemyDestroysList = new List<EnemyFacade>();
+        private readonly Dictionary<Entity, PlayerFacade> _spawnDictionary = new Dictionary<Entity, PlayerFacade>();
+        private readonly List<PlayerFacade> _destroysList = new List<PlayerFacade>();
         private ComponentGroup _group;
 
-        public EnemySpawnSystem(SignalBus signalBus, int priority, EnemyFacade.Pool enemyPool)
+        public PlayerSpawnSystem(SignalBus signalBus, int priority, PlayerFacade.Pool enemyPool, GameSettings settings)
         {
             _signalBus = signalBus;
             _enemyPool = enemyPool;
+            _settings = settings;
             Priority = priority;
         }
 
         protected override void OnCreateManager()
         {
-            _entityManager = World.Active.GetExistingManager<EntityManager>();
-
             _group = GetComponentGroup(
                 ComponentType.ReadOnly<DestroyEntityComponent>(),
-                ComponentType.ReadOnly<EnemyComponent>());
+                ComponentType.ReadOnly<PlayerComponent>());
 
-            _signalBus.GetStream<SignalUiLayerWantsAddEnemy>()
-                .Subscribe(x => {AddEnemy(x.Count);})
+            _signalBus.GetStream<SignalUiLayerWantsAddPlayer>()
+                .Subscribe(x => {Add(x.Count);})
                 .AddTo(_disposables);
         }
 
@@ -54,40 +54,40 @@ namespace Systems
             Entities.With(_group).ForEach(
                 (entity) =>
                 {
-                    if (_enemySpawns.ContainsKey(entity))
+                    if (_spawnDictionary.ContainsKey(entity))
                     {
-                        _enemyDestroysList.Add(_enemySpawns[entity]);
-                        _enemySpawns.Remove(entity);
+                        _destroysList.Add(_spawnDictionary[entity]);
+                        _spawnDictionary.Remove(entity);
                     }
                     PostUpdateCommands.DestroyEntity(entity);
                 });
 
-            foreach (var entity in _enemyDestroysList)
+            foreach (var entity in _destroysList)
             {
                 _enemyPool.Despawn(entity);
             }
 
-            _enemyDestroysList.Clear();
+            _destroysList.Clear();
         }
 
-        private void AddEnemy(int count)
+        private void Add(int count)
         {
             for (var i = 0; i < count; i++)
             {
                 var spawnPosition = new Vector3(Random.Range(-10f, 10f), 0f, Random.Range(-10f, 10f));
-                SpawnEnemy(spawnPosition, quaternion.identity);
+                Spawn(spawnPosition, quaternion.identity);
             }
         }
 
-        private void SpawnEnemy(Vector3 position, quaternion rotation)
+        private void Spawn(Vector3 position, quaternion rotation)
         {
             var enemy = _enemyPool.Spawn(position);
             var entity = enemy.gameObject.GetComponent<GameObjectEntity>().Entity;
-            _entityManager.AddComponentData(entity, new EnemyComponent());
-            _entityManager.AddComponentData(entity, new HealthComponent { Value = 50 });
-            _entityManager.AddComponentData(entity, new InputComponent());
+            EntityManager.AddComponentData(entity, new PlayerComponent());
+            EntityManager.AddComponentData(entity, new HealthComponent { Value = _settings.constants.healthPlayer });
+            EntityManager.AddComponentData(entity, new InputComponent());
 
-            _enemySpawns.Add(entity, enemy);
+            _spawnDictionary.Add(entity, enemy);
         }
     }
 }
