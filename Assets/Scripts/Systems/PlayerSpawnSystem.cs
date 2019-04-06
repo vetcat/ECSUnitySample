@@ -20,7 +20,7 @@ namespace Systems
         private readonly GameSettings _settings;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
 
-        public PlayerSpawnSystem(SignalBus signalBus, int priority, PlayerFacade.Pool pool, GameSettings settings)
+        public PlayerSpawnSystem(int priority, SignalBus signalBus, PlayerFacade.Pool pool, GameSettings settings)
         {
             _signalBus = signalBus;
             _pool = pool;

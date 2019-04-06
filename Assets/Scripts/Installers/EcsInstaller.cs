@@ -11,6 +11,7 @@ namespace Installers
     {
         [Zenject.Inject]
         private GameSettings _settings;
+        private const int PoolPlayersCount = 50;
 
         public override void InstallBindings()
         {
@@ -59,7 +60,7 @@ namespace Installers
         private void BindFactories()
         {
             Container.BindMemoryPool<PlayerFacade, PlayerFacade.Pool>()
-                .WithInitialSize(10)
+                .WithInitialSize(PoolPlayersCount)
                 .FromComponentInNewPrefab(_settings.prefabs.player)
                 .UnderTransformGroup("Pool_Players");
         }
