@@ -44,17 +44,14 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<CharacterControllerRotationSystem>().AsSingle().WithArguments(520).NonLazy();
 
             //low priority
-            Container.BindInterfacesAndSelfTo<PlayerSpawnSystem>().AsSingle().WithArguments(1010).NonLazy();
-
-            //simple reactive system
-            Container.BindInterfacesAndSelfTo<PlayerCountReactiveSystem>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<PlayerFactorySystem>().AsSingle().WithArguments(1010).NonLazy();
+            Container.BindInterfacesAndSelfTo<PlayerSpawnSystem>().AsSingle().WithArguments(1020).NonLazy();
         }
 
         private void BindSignals()
         {
             Container.DeclareSignal<SignalUiLayerWantsAddPlayer>();
             Container.DeclareSignal<SignalUiLayerWantsRemovePlayer>();
-            Container.DeclareSignal<SignalEcsLayerPlayerCountUpdate>();
         }
 
         private void BindFactories()
