@@ -10,6 +10,7 @@ namespace Installers
     public class UiSettingsInstaller : ScriptableObjectInstaller<UiSettingsInstaller>
     {
         public PlayerView playerView;
+        public MenuView menuView;
 
         public override void InstallBindings()
         {
@@ -25,8 +26,8 @@ namespace Installers
 
         private void BindViews(Canvas canvas)
         {
-            Debug.Log("BindViews");
             Container.BindViewController<PlayerView, PlayerViewController>(playerView, canvas);
+            Container.BindViewController<MenuView, MenuViewController>(menuView, canvas);
         }
     }
 }

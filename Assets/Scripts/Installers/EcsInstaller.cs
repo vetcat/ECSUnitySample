@@ -52,6 +52,7 @@ namespace Installers
         {
             Container.DeclareSignal<SignalUiLayerWantsAddPlayer>();
             Container.DeclareSignal<SignalUiLayerWantsRemovePlayer>();
+            Container.DeclareSignal<SignalStartGame>();
         }
 
         private void BindFactories()

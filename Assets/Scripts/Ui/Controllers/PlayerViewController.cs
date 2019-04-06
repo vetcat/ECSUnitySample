@@ -23,6 +23,8 @@ namespace Ui.Controllers
 
         public override void Initialize()
         {
+            View.Hide();
+
             View.buttonAdd.OnClickAsObservable()
                 .Subscribe(_=>{ _signalBus.Fire(new SignalUiLayerWantsAddPlayer(AddPayerCount));})
                 .AddTo(_disposables);
@@ -33,6 +35,13 @@ namespace Ui.Controllers
 
             _playerFactorySystem.SpawnList.ObserveCountChanged()
                 .Subscribe(UpdatePlayerCount)
+                .AddTo(_disposables);
+
+            _signalBus.GetStream<SignalStartGame>()
+                .Subscribe(_ =>
+                {
+                    View.Show();
+                })
                 .AddTo(_disposables);
         }
 

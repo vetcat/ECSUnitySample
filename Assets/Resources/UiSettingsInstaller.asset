@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerView: {fileID: 8182278234831675526, guid: 71139df94d1cd3544a9ca1d75d4d3e30,
     type: 3}
+  menuView: {fileID: 7628444753567188916, guid: 5525a84db196d55419b24d1ffe6227f8,
+    type: 3}

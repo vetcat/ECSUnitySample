@@ -14,6 +14,7 @@ namespace Tests.Editor.Systems
         {
             Container.DeclareSignal<SignalUiLayerWantsAddPlayer>();
             Container.DeclareSignal<SignalUiLayerWantsRemovePlayer>();
+            Container.DeclareSignal<SignalStartGame>();
 
             SignalBusInstaller.Install(Container);
             var signalBus = Container.Resolve<SignalBus>();

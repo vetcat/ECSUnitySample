@@ -32,6 +32,10 @@ namespace Systems
             _signalBus.GetStream<SignalUiLayerWantsRemovePlayer>()
                 .Subscribe(Remove)
                 .AddTo(_disposables);
+
+            _signalBus.GetStream<SignalStartGame>()
+                .Subscribe(x => {Add(1);})
+                .AddTo(_disposables);
         }
 
         private void Remove(SignalUiLayerWantsRemovePlayer data)
