@@ -1,22 +1,17 @@
 using Components;
 using Providers;
 using Unity.Entities;
-using Unity.Jobs;
+using UnityEngine;
 
 namespace Systems
 {
     [DisableAutoCreation]
-    public class InputSystem : JobComponentSystem, IPrioritySystem
+    public class InputSystem : ComponentSystem, IPrioritySystem
     {
-        private readonly IInputProvider _inputProvider;
         public int Priority { get; }
 
-        private EndSimulationEntityCommandBufferSystem _barrier;
-        private EntityArchetype _inputUpdateArchetype;
-
-        //only for test JobHandle/InputUpdateJob
-        private static float _horizontal;
-        private static float _vertical;
+        private readonly IInputProvider _inputProvider;
+        private ComponentGroup _group;
 
         public InputSystem(int priority, IInputProvider inputProvider)
         {
@@ -26,37 +21,23 @@ namespace Systems
 
         protected override void OnCreateManager()
         {
-            _barrier = World.GetOrCreateManager<EndSimulationEntityCommandBufferSystem>();
-            _inputUpdateArchetype = EntityManager.CreateArchetype(typeof(InputComponent));
+            _group = GetComponentGroup(
+                ComponentType.ReadOnly<Transform>(),
+                ComponentType.ReadOnly<CharacterController>(),
+                ComponentType.ReadOnly<InputComponent>());
         }
 
-        private struct InputUpdateJob : IJobProcessComponentDataWithEntity<InputComponent>
+        protected override void OnUpdate()
         {
-            public EntityCommandBuffer.Concurrent Ecb;
-
-            public EntityArchetype InputUpdatedArchetype;
-
-            public void Execute(Entity entity, int index, ref InputComponent inputData)
-            {
-                inputData.Horizontal = _horizontal;
-                inputData.Vertical = _vertical;
-            }
-        }
-
-        protected override JobHandle OnUpdate(JobHandle inputDeps)
-        {
-            _horizontal = _inputProvider.Horizontal;
-            _vertical = _inputProvider.Vertical;
-
-            var job = new InputUpdateJob
-            {
-                Ecb = _barrier.CreateCommandBuffer().ToConcurrent(),
-                InputUpdatedArchetype = _inputUpdateArchetype
-            };
-            inputDeps = job.Schedule(this, inputDeps);
-            inputDeps.Complete();
-            _barrier.AddJobHandleForProducer(inputDeps);
-            return inputDeps;
+            Entities.With(_group).ForEach(
+                (Entity entity, ref InputComponent inputComponent) =>
+                {
+                    PostUpdateCommands.SetComponent(entity, new InputComponent
+                    {
+                        Vertical = _inputProvider.Vertical,
+                        Horizontal = _inputProvider.Horizontal
+                    });
+                });
         }
     }
 }

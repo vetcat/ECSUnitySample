@@ -12,14 +12,13 @@ namespace Systems
     {
         public int Priority { get; }
 
-        private readonly IInputProvider _inputProvider;
         private readonly ITimeProvider _timeProvider;
         private readonly GameSettings _settings;
-
         private ComponentGroup _group;
-        public CharacterControllerMovementSystem(int priority, IInputProvider inputProvider, ITimeProvider timeProvider, GameSettings settings)
+        private const float InputFilter = 0.01f;
+
+        public CharacterControllerMovementSystem(int priority, ITimeProvider timeProvider, GameSettings settings)
         {
-            _inputProvider = inputProvider;
             _timeProvider = timeProvider;
             _settings = settings;
             Priority = priority;
@@ -35,15 +34,15 @@ namespace Systems
 
         protected override void OnUpdate()
         {
-            var speed = _settings.constants.SpeedPlayerMove * _inputProvider.Vertical;
-
-            if (Math.Abs(speed) < 0.01f)
-                return;
-
             Entities.With(_group).ForEach(
-                (Entity entity, CharacterController controller, Transform transform) =>
+                (Entity entity, ref InputComponent inputComponent, CharacterController controller, Transform transform) =>
                 {
-                   controller.Move(transform.forward * speed * _timeProvider.DeltaTime);
+                    var speed = _settings.constants.SpeedPlayerMove * inputComponent.Vertical;
+
+                    if (Math.Abs(speed) > InputFilter)
+                    {
+                        controller.Move(transform.forward * speed * _timeProvider.DeltaTime);
+                    }
                 });
         }
     }

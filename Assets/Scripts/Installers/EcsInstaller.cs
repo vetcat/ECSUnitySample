@@ -39,8 +39,8 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<InputSystem>().AsSingle().WithArguments(20).NonLazy();
 
             //medium priority
-            Container.BindInterfacesAndSelfTo<CharacterControllerMovementSystem>().AsSingle().WithArguments(130).NonLazy();
-            Container.BindInterfacesAndSelfTo<CharacterControllerRotationSystem>().AsSingle().WithArguments(130).NonLazy();
+            Container.BindInterfacesAndSelfTo<CharacterControllerMovementSystem>().AsSingle().WithArguments(510).NonLazy();
+            Container.BindInterfacesAndSelfTo<CharacterControllerRotationSystem>().AsSingle().WithArguments(520).NonLazy();
 
             //low priority
             Container.BindInterfacesAndSelfTo<PlayerSpawnSystem>().AsSingle().WithArguments(1010).NonLazy();
