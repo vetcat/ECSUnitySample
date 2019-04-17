@@ -22,7 +22,7 @@ namespace Tests.Editor.Systems
             Container.BindInterfacesAndSelfTo<PlayerSpawnSystem>().AsSingle().WithArguments(1010).NonLazy();
             var system = Container.Resolve<PlayerSpawnSystem>();
 
-            World.Active.AddManager(system);
+            World.Active.AddSystem(system);
 
             Assert.AreEqual(0, PlayerPool.NumActive);
 

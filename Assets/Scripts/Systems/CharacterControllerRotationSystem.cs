@@ -14,7 +14,7 @@ namespace Systems
         private readonly IInputProvider _inputProvider;
         private readonly ITimeProvider _timeProvider;
         private readonly GameSettings _settings;
-        private ComponentGroup _group;
+        private EntityQuery _group;
 
         public CharacterControllerRotationSystem(int priority, IInputProvider inputProvider, ITimeProvider timeProvider, GameSettings settings)
         {
@@ -26,7 +26,7 @@ namespace Systems
 
         protected override void OnCreateManager()
         {
-            _group = GetComponentGroup(
+            _group = GetEntityQuery(
                 ComponentType.ReadOnly<Transform>(),
                 ComponentType.ReadOnly<CharacterController>(),
                 ComponentType.ReadOnly<InputComponent>());

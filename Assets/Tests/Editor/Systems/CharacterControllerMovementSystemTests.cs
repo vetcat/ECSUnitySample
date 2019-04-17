@@ -14,7 +14,7 @@ namespace Tests.Editor.Systems
         {
             Container.BindInterfacesAndSelfTo<CharacterControllerMovementSystem>().AsSingle().WithArguments(510).NonLazy();
             var system = Container.Resolve<CharacterControllerMovementSystem>();
-            World.Active.AddManager(system);
+            World.Active.AddSystem(system);
 
             var player = PlayerFactorySystem.Create(Vector3.zero, quaternion.identity);
             TimeProvider.SetDeltaTime(0.5f);

@@ -11,7 +11,7 @@ namespace Systems
         public int Priority { get; }
 
         private readonly IInputProvider _inputProvider;
-        private ComponentGroup _group;
+        private EntityQuery _group;
 
         public InputSystem(int priority, IInputProvider inputProvider)
         {
@@ -21,7 +21,7 @@ namespace Systems
 
         protected override void OnCreateManager()
         {
-            _group = GetComponentGroup(
+            _group = GetEntityQuery(
                 ComponentType.ReadOnly<Transform>(),
                 ComponentType.ReadOnly<CharacterController>(),
                 ComponentType.ReadOnly<InputComponent>());

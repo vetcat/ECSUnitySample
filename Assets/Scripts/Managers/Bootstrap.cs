@@ -18,11 +18,11 @@ namespace Managers
         public void Initialize()
         {
             _systems.Sort((x, y) => x.Priority.CompareTo(y.Priority));
-            var simulationSystemGroup = World.Active.GetOrCreateManager<SimulationSystemGroup>();
+            var simulationSystemGroup = World.Active.GetOrCreateSystem<SimulationSystemGroup>();
 
             foreach (var system in _systems)
             {
-                World.Active.AddManager((ComponentSystemBase) system);
+                World.Active.AddSystem((ComponentSystemBase) system);
                 simulationSystemGroup.AddSystemToUpdateList((ComponentSystemBase) system);
                 Debug.Log("add system " + system.GetType() + "; Priority = " + system.Priority);
             }

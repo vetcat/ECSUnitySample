@@ -107,3 +107,16 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.package-manager-ui from version 2.1.1 to 2.1.2
+
+=== Wed Apr 17 16:27:39 2019
+
+Packages were changed.
+Update Mode: resetToDefaultDependencies
+
+The following packages were added:
+  com.unity.analytics@3.3.2
+  com.unity.purchasing@2.0.6
+  com.unity.ads@2.0.8
+The following packages were removed:
+  com.unity.entities@0.0.12-preview.29
+  com.unity.xr.legacyinputhelpers@2.0.2

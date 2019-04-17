@@ -44,7 +44,7 @@ namespace Tests.Editor.SetUp
 
             Container.BindInterfacesAndSelfTo<PlayerFactorySystem>().AsSingle().WithArguments(1010).NonLazy();
             PlayerFactorySystem = Container.Resolve<PlayerFactorySystem>();
-            World.Active.AddManager(PlayerFactorySystem);
+            World.Active.AddSystem(PlayerFactorySystem);
 
             //UI
             UiSettings = Resources.Load("UiSettingsInstaller") as UiSettingsInstaller;

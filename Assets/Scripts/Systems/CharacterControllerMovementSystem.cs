@@ -14,7 +14,7 @@ namespace Systems
 
         private readonly ITimeProvider _timeProvider;
         private readonly GameSettings _settings;
-        private ComponentGroup _group;
+        private EntityQuery _group;
         private const float InputFilter = 0.01f;
 
         public CharacterControllerMovementSystem(int priority, ITimeProvider timeProvider, GameSettings settings)
@@ -26,7 +26,7 @@ namespace Systems
 
         protected override void OnCreateManager()
         {
-            _group = GetComponentGroup(
+            _group = GetEntityQuery(
                 ComponentType.ReadOnly<Transform>(),
                 ComponentType.ReadOnly<CharacterController>(),
                 ComponentType.ReadOnly<InputComponent>());
