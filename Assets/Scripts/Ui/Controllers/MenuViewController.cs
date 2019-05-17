@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Ui.Controllers
 {
-    public class MenuViewController : UiController<MenuView>
+    public class MenuViewController : UiController<UiMenuView>
     {
         private readonly SignalBus _signalBus;
         private readonly CompositeDisposable _disposables = new CompositeDisposable();

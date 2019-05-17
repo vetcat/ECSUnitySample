@@ -9,8 +9,8 @@ namespace Installers
     [CreateAssetMenu(fileName = "UiSettingsInstaller", menuName = "Installers/UiSettingsInstaller")]
     public class UiSettingsInstaller : ScriptableObjectInstaller<UiSettingsInstaller>
     {
-        public PlayerView playerView;
-        public MenuView menuView;
+        public UiPlayerView uiPlayerView;
+        public UiMenuView uiMenuView;
 
         public override void InstallBindings()
         {
@@ -26,8 +26,8 @@ namespace Installers
 
         private void BindViews(Canvas canvas)
         {
-            Container.BindViewController<PlayerView, PlayerViewController>(playerView, canvas);
-            Container.BindViewController<MenuView, MenuViewController>(menuView, canvas);
+            Container.BindViewController<UiPlayerView, PlayerViewController>(uiPlayerView, canvas);
+            Container.BindViewController<UiMenuView, MenuViewController>(uiMenuView, canvas);
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Ui.Views
 {
-    public class PlayerView : UiView
+    public class UiPlayerView : UiView
     {
         public Button buttonAdd;
         public Button buttonRemove;

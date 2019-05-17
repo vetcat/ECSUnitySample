@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Ui.Controllers
 {
-    public class PlayerViewController : UiController<PlayerView>
+    public class PlayerViewController : UiController<UiPlayerView>
     {
         private readonly SignalBus _signalBus;
         private readonly PlayerFactorySystem _playerFactorySystem;

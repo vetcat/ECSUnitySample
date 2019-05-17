@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Ui.Views
 {
-    public class MenuView : UiView
+    public class UiMenuView : UiView
     {
         public Button buttonStart;
     }

@@ -24,7 +24,7 @@ namespace Managers
             {
                 World.Active.AddSystem((ComponentSystemBase) system);
                 simulationSystemGroup.AddSystemToUpdateList((ComponentSystemBase) system);
-                Debug.Log("add system " + system.GetType() + "; Priority = " + system.Priority);
+                //Debug.Log("add system " + system.GetType() + "; Priority = " + system.Priority);
             }
         }
     }

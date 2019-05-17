@@ -13,7 +13,7 @@ namespace Tests.Editor.Views
     public class PlayerViewControllerTests : EcsTestsBase
     {
         private PlayerViewController _controller;
-        private PlayerView _view;
+        private UiPlayerView _view;
         private SignalBus _signalBus;
 
         protected override void Install()
@@ -26,12 +26,12 @@ namespace Tests.Editor.Views
             SignalBusInstaller.Install(Container);
             _signalBus = Container.Resolve<SignalBus>();
 
-            Container.BindViewController<PlayerView, PlayerViewController>(UiSettings.playerView, Canvas);
+            Container.BindViewController<UiPlayerView, PlayerViewController>(UiSettings.uiPlayerView, Canvas);
 
             _controller = Container.Resolve<PlayerViewController>();
             _controller.Initialize();
 
-            _view = Container.Resolve<PlayerView>();
+            _view = Container.Resolve<UiPlayerView>();
         }
 
         [Test]

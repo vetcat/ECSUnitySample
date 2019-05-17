@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3499990366699421315}
   - component: {fileID: 7628444753567188916}
   m_Layer: 5
-  m_Name: MenuView
+  m_Name: UIMenuView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 5153303650625245358}
   - component: {fileID: 2131550205257226147}
   m_Layer: 5
-  m_Name: ButtonStart
+  m_Name: '[UIMenuView] - ButtonStart'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

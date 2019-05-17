@@ -17,8 +17,6 @@ namespace Installers
         {
             DefaultWorldInitialization.Initialize("SampleWorld", false);
 
-            SignalBusInstaller.Install(Container);
-
             BindProviders();
             BindSignals();
             BindFactories();
